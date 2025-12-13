@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editeurs{% endblock %}
+
+{% block body %}
+
+<section class="container px-4">
+<h1>Editeurs</h1>
+{% for editor in pagination %}
+    <div class="card py-4 px-2 mb-1">
+        <div class="card-title">
+            <a href="{{path('app_admin_editor_edit', {id: editor.id})}}" title = "Editer" class="link-dark">
+                {{editor.name}}
+            </a>
+        </div>
+    </div>
+    {% else %}
+    aucun enregistrement en base de données
+{% endfor %}
+<div class="navigation mt-2">
+	{{ knp_pagination_render(pagination) }}
+</div>
+</section>
+{% endblock %}

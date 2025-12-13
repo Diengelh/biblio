@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% set action = app.current_route == "app_admin_author_new" ? "Ajout": "Edition" %}
+    
+{% block title %}{{action}} d'auteur{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { padding-top: 4em; padding-bottom: 2em; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+
+    <div class='w-50 m-auto'> {# center la div#}
+
+        <h1>Ajout d'auteur</h1><br>
+
+        {{form_start(form)}}  {#balise ouvrante du formulaire#}
+
+           {# afficher les champs de formulaires#}
+           {{ form_row(form.name, {label: "Nom"}) }}
+           {{ form_row(form.dateOfBirth, {label: "Date de Naissance"}) }}
+           {{ form_row(form.dateOfDeath, {label: "Date de Décès"}) }}
+           {{ form_row(form.nationality, {label: "Nationalité"}) }}
+           {{ form_row(form.books, {label: "Livres"}) }}
+           {{ form_row(form.certification, {label : " Je certifie l'exactitude des informations fournies "})}}
+
+            <button type="submit" class="btn btn-primary px-4">Envoyer</button>
+            {% if author_id is not null %}
+                {# ajouter le button d'annulation si il s'agit d'une édition d'auteur #}
+                <a href="{{ path('app_admin_author_show', {id: author_id})}}" class="btn btn-danger">Annuler</a>
+            {% endif %}
+        {{form_end(form)}}    {#balise fermante du formulaire#}
+    </div>
+    
+</div>
+{% endblock %}

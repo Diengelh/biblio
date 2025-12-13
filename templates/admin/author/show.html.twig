@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Détails d'un auteur {% endblock %}
+
+{% block body %}
+
+<section class="container px-4">
+<h1 >Détails d'un auteur</h1>
+
+{% if author is not null %}
+
+<div class="card mb-1 m-auto p-4">
+    <div class="card-title d-flex justify-content-between">
+        <h4>{{author.name}}</h4>
+        <small class="text-muted">Identifiant{{author.id}}</small>
+    </div>
+    <div class="d-flex justify-content-between card-text">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Date de Naissance: {{author.DateOfBirth|date("d/M/Y")}}</li>
+            <li class="list-group-item">
+                Date de Décès: {{author.dateOfDeath is not null ? author.DateOfDeath|date("d/M/Y"): "-"}}
+            </li>
+        </ul>
+        {#tapper "symfony composer require twig/intl-extra" pour pouvoir utiliser country_name#}
+        <p><small>Nationalité: {{author.nationality|country_name}}</small></p>
+    </div>
+</div>
+
+<a href="{{ path('app_admin_author_edit', {id: author.id})}}" class="btn btn-warning px-4 m-2">Editer</a>
+<a href='{{ path("app_admin_author_index") }}' class="btn btn-primary px-4 m-2"> Auteurs</a>
+
+{% else %}
+
+<div>Aucun utilisateur trouvé</div>
+
+{% endif %}
+
+</section>
+{% endblock %}

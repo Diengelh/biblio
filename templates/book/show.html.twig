@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{book.title}}{% endblock %}
+
+{% block stylesheets %}
+    <link href={{ asset("css/styles_show_book.css") }} rel="stylesheet" />
+{% endblock %}
+
+{% block javascripts %}
+    <script defer src= {{ asset("js/scripts_show_book.js") }}></script>
+{% endblock %}
+
+{% block body %}
+
+ <section class="py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                    {% for type, messages in app.flashes %}
+                    <div class="d-flex justify-content-center alert alert-{{ type }}">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                <div class="row gx-4 gx-lg-5 align-items-center">
+                    <div class="col-md-5"><img class="card-img-top mb-5 mb-md-0" max-width="300" max-height="500" src="{{book.cover}}" alt="..." /></div>
+                    <div class="col-md-6">
+                        <div class="small mb-1">IBSN: {{book.isbn}} </div>
+                        <h1 class="display-5 fw-bolder"> {{book.title}} </h1>
+                        <div class="fs-5 mb-5">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Auteur(s): {% for author in book.authors %} {{author.name}}, {{" "}} {% endfor %}</li>
+                                <li class="list-group-item">Editeur: {{book.editor.name}} </li>
+                                <li class="list-group-item"> {{book.pageNumber}} pages - {{book.editedAt |date("d M Y")}} </li>
+                                <li class="list-group-item"> Statut: {{book.status.getLabel}}</li>
+                            </ul>
+                        </div>
+                        <p class="lead">{{book.plot}}</p>
+                        {% if app.user %}
+                            {# si un utilisateur est connecté on affiche le formulaire de notage d'un livre #}
+                            <div>
+                                {{ form_start(form) }}
+                                    {{form_row(form.note)}}
+                                    <input type="submit" value="Valider la note" class="btn btn-primary px-4 mt-2">
+                                {{ form_end(form) }}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="d-flex mt-4">
+                            <a class="btn btn-outline-dark flex-shrink-0 px-3" type="button" href="{{ path("app_book")}}">
+                                Retour à la liste
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+ </section>
+
+{% endblock %}

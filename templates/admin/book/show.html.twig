@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Détails
+{% endblock %}
+
+{% block body %}
+
+<section class="container px-2">
+    {% if book is not null %}
+        <div class="card p-4">
+            <div class="card-title d-flex justify-content-between">
+                <h4>{{book.title}}</h4>
+                <small class="text-muted">Identifiant: {{book.id}}</small>
+            </div>
+            <div class="card-body">
+                
+                <div class="d-flex justify-content-between">
+                    <div class="text-muted">Editeur: {{book.editor.name}}</div>
+                    <div class="text-muted">Nombre de page: {{book.pageNumber}}</div>
+                </div>
+                <span class="text-muted">Auteurs: </span>
+                <ul class="list-group list-group-flush">
+                  {% for author in book.authors %}
+                    <li class="list-group-item">
+                        <a href="{{path('app_admin_author_show', {id: author.id})}}" class="stretched-link link-dark" title="Détails de l'auteur">{{author.name}}</a>
+                    </li>
+                    {% else %}
+                        aucun auteur trouvé
+                  {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% else %}
+        Aucun livre trouvé
+    {% endif %}
+</section>    
+{% endblock %}

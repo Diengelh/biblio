@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajout d'éditeur{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { padding-top: 4em; padding-bottom: 2em; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <div class = 'w-50 m-auto'>
+        <h1> Ajout d'éditeur</h1><br>
+
+        {{form_start(form)}}
+            {{form_row(form.name, {label: "Nom"})}}
+            <button type="submit" class="btn btn-primary px-4">envoyer</button>
+            {% if editor_id is not null %}
+                {# ajouter le button d'annulation si il s'agit d'une édition d'auteur #}
+                <a href="{{ path('app_admin_editor_index', {id: editor_id})}}" class="btn btn-danger px-4">Annuler</a>
+            {% endif %}
+        {{form_end(form)}}
+
+    </div>
+</div>
+{% endblock %}

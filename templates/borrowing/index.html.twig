@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes emprunts{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function confirmAction(){
+            return confirm("Êtes vous sûr de vouloir rendre le livre");
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <section class="container">
+
+        <div class="container ">
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="d-flex justify-content-center alert alert-{{ type }}"> {{message}}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+        <h1>Mes emprunts</h1>
+
+        <div class="container mt-4">
+            {% for borrowing in borrowings %}
+                <div class="card d-flex mb-2">
+                    <div class="card_title">
+                        <a href="{{path('app_book_show', {id: borrowing.book.id})}}" class=" link-dark h4">{{borrowing.book.title}}</a>
+                    </div>
+                    <div class="card-body justify-content-between d-flex">
+                        <div>
+                        <img src="{{borrowing.book.cover}}" alt="image introuvable" width="80px" height="100px">
+                        </div>
+                        <div>
+                            <span class="text-muted">Emprunté le: </span> {{borrowing.borrowingAt|date("d/m/Y")}}
+                        </div>
+                        <div>
+                            <span class="text-muted">A rendre le: </span> {{borrowing.ToRenderAt|date("d/m/Y")}}
+                        </div>
+                        <div class="nav-item dropdown">
+                            <button class="btn btn-dark" data-bs-toggle="dropdown" aria-expanded="false">
+                                ...
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="{{path('app_book_show', {id: borrowing.book.id})}}" class=" link-dark h4">consulter</a></li>
+                                <li><a class="dropdown-item" href="{{path('app_borrowing_delete', {id: borrowing.id})}}" onclick="return confirmAction()">rendre le livre</a></li>
+                                <li><a class="dropdown-item" href="#">renouveler</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                    Aucun emprunt en cours, nous vous invitons dans
+                    notre <a href="{{path('app_book')}}">catalogue</a> pour
+                    ajouter des livres dans votre panier.
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

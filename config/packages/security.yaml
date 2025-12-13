@@ -3,15 +3,41 @@ security:
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
-    providers:
-        users_in_memory: { memory: null }
+    providers:  #fournisseur d'utilisateurs c_à_d là on récupére les utilisateurs
+        # used to reload user from session & other features (e.g. switch_user)
+        # un user provider sert à récupérer un utilisateur à partir d'un identifiant (formlaire par exemple)
+        app_user_provider:
+            entity: #le type du provider app_user_provider
+                class: App\Entity\User
+                property: email  #le nom de champ qui identifie les utilisateurs(doit être unique pour chaque utilisateur)
+
+        # On peut ajouter autant de provider qu'on veut
+        # On peut fusionner aussi deux providers
+
+        # Un firewall sert à exécuter un authentification en deux étapes en :
+          # appellant un fournisseur d'accès (provider) pour vérifier si l'utilisateur existe dans la base
+            # si oui le provider lui retourne l'utilisateur en question (ses données)
+          # appellant un objet authentificateur (Authentitor) pour vérifier si le mot de passe de l'utisateur fourni
+            # correspond avec celui enregistré dans la base de données.
     firewalls:
+        # nous pouvons avoir autant de firewall que nous désirons
+        # chaque firewall s'applique uniquement aux URL corespondant à la clé pattern
+        # si nous renseignons pas de pattern le firewall s'applique à tous les URL
+        # Un seul firewall est appliqué et est le premier qui correspond au chemin
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+            security: false # Aucune véirification de sécurité ne sera effectuée sur les routes qui correspondent à ce pattern
         main:
-            lazy: true
-            provider: users_in_memory
+            lazy: true # Ça veut dire que même si la route demandée entre dans le périmètre de notre firewall, celui-ci l'authentification sera fait que si nous demandons une vérification de droits (provider) quelque part. Sinon, le firewall ne fera rien
+            provider: app_user_provider # spécifier le nom du fournisseur d'accès (provider) en question
+            form_login:
+                login_path: app_login # nom de la route de connexion
+                check_path: app_login # nom de la route qui traite le formulaire
+                enable_csrf: true  # se protéger des attaques du type csrf quand enable_crsf est à true
+            logout:
+                path: app_logout 
+                # where to redirect after logout
+                target: app_main_index
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -22,8 +48,14 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+    role_hierarchy:
+        ROLE_USER: ~ # ça veut dire que le role_user est au bas de l'echelle
+        ROLE_MODERATEUR: ROLE_USER
+        ROLE_AJOUT_DE_LIVRE: ROLE_USER
+        ROLE_EDITION_DE_LIVRE: ROLE_AJOUT_DE_LIVRE
+        ROLE_ADMIN: [ROLE_MODERATEUR, ROLE_EDITION_DE_LIVRE]
 
 when@test:
     security:

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste d'auteurs
+{% endblock %}
+
+{% block body %}
+
+	<section class="container px-4">
+
+		<h1 class="mb-4">Liste d'auteurs</h1>
+        
+		<div class="count my-4">
+			Nombre total d'auteurs trouvés: <span class="text-success">{{ pagination.getTotalItemCount }}</span>
+		</div>		
+		<ul class="list-group">
+			{% for author in pagination %}
+				<div class="card mb-1">
+					<div class="card-body">
+						<div class="card-title d-flex justify-content-between">
+							<a href="{{ path('app_admin_author_show', {id: author.id}) }}" class="stretched-link link-dark">
+								<h4 class="md-1">{{author.name}}</h4>
+							</a>
+							<small class="text-muted">Identifiant:
+								{{author.id}}</small>
+						</div>
+					</div>
+				</div>
+			{% else %}
+				<li>Aucun enregistrement en base de données.</li>
+			{% endfor %}
+		</ul>
+
+		{#afficher les buttons de la page#}
+		<div class="navigation mt-2">
+    		{{ knp_pagination_render(pagination) }}
+		</div>
+
+</section>
+{% endblock %}

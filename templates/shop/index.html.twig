@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon panier{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function confirmAction(){
+            return confirm("Êtes vous sûr de vouloir supprimer cet article dans votre panier ?");
+        }
+
+        function confirmAction2() {
+            return confirm("Êtes vous sûr de vouloir vider ton panier ?")
+        }
+    </script>
+{% endblock %}
+
+{% block body %}
+    <section class="container">
+        <div class="container ">
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="d-flex justify-content-center alert alert-{{ type }}"> {{message}}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    
+        <h1>Mon panier</h1>
+        
+        <div class="container">
+            {% for shop in shops %}
+                <div class="card p-4 m-1">
+                    <div class="card_title">
+                        <a href="{{path('app_book_show', {id: shop.book.id})}}" class=" link-dark h4">{{shop.book.title}}</a>
+                    </div>
+                    <div class="card-body d-flex justify-content-between">
+                        <img src="{{shop.book.cover}}" alt="image introuvable" width="80px" height="100px">
+                        <div class"">
+                            <a href="{{path('app_shop_delete', {id: shop.id})}}" class="btn btn-danger" title="supprimer du panier" onclick="return confirmAction()">supprimer</a>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                    Aucun article dans votre panier, nous vous invitons dans
+                    <a href="{{path('app_book')}}">catalogue</a> pour ajouter
+                    des articles dans votre panier.
+            {% endfor %}
+            
+            {% if shops.count != 0 %}
+                <div class="container mt-4">
+                <a href="{{path('app_shop_delete.all.shops')}}" class="btn btn-danger" onclick="return confirmAction2()" >Vider le Panier</a>
+                <a href="{{path('app_borrowing_recap_shop')}}" class="btn btn-success">Valider Mon panier</a>
+                </div>
+            {% endif %}
+
+        </div>
+
+        <div class="navigation mt-2">
+    		{{ knp_pagination_render(shops) }}
+		</div>
+    
+    </section>
+{% endblock %}

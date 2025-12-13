@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Récapitulation de la liste des emprunts
+{% endblock %}
+
+{% block body %}
+    <section class="container">
+        <h1>Récapitulation de la liste des emprunts</h1>
+        <div class="mt-4">
+            
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Nom de l'article</th>
+                        <th scope="col">Date de Rendu de l'article</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for borrowing in borrowings %}
+                    <tr>
+                        <td><a href="{{path('app_book_show', {id: borrowing.book.id})}}" class=" link-dark h5">{{borrowing.book.title}}</a></td>
+                        <td>{{borrowing.toRenderAt|date("d M Y")}}</td>
+                        <td class="nav-item dropdown">
+                            <p class="btn btn-dark pt-1" data-bs-toggle="dropdown" aria-expanded="false">
+                                ...
+                            </p>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" href="{{path('app_book_show', {id: borrowing.book.id})}}" class=" link-dark h4">consulter</a></li>
+                                <li><a class="dropdown-item" href="#" onclick="return confirmAction()">supprimer</a></li>
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <a href="{{path('app_shop_index')}}" class="btn btn-danger px-4 mt-2" title="Retour au panier">Retour</a>
+            <a href="{{path('app_borrowing_validate.shops')}}" class="btn btn-primary px-4 mt-2">Valider</a>
+
+        </div>
+    </section>
+{% endblock %}

@@ -19,6 +19,26 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    #ajouter des services (kernel, doctrine et sécurity)
+    App\EventSubscriber\:
+        resource: "../src/EventSubscriber/"
+        tags: 
+            - {name: kernel.event_subscriber}
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    #ajouter Un service (doctrine)
+    App\EventListener\UserListener:
+        tags: 
+            - {name: doctrine.event_listener, event: prePersist}
+            - {name: doctrine.event_listener, event: preUpdate}
+    
+    App\EventListener\BorrowingListener:
+        tags: 
+            - {name: doctrine.event_listener, event: postPersist}
+            - {name: doctrine.event_listener, event: preRemove}
+
+            
+            
+
+
+
+

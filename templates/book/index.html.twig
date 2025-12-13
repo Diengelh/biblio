@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Notre collection de livre{% endblock %}
+
+{% block stylesheets %}
+        <link href={{ asset("css/styles_book.css") }} rel="stylesheet" />
+{% endblock %}
+
+{% block javascripts %}
+    <script defer src="https://kit.fontawesome.com/2830e3095b.js" crossorigin="anonymous"></script>
+    <script defer src= {{ asset("js/scripts_book.js") }}></script>
+{% endblock %}
+
+
+{% block body %}
+
+<section class="py-5 mt">
+
+    <div class="container px-4 px-lg-5 mt-5">
+
+    <div class="container ">
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="d-flex justify-content-center alert alert-{{ type }}"> {{message}}</div>
+                {% endfor %}
+            {% endfor %}
+    </div>
+    
+    <h1> Notre Collection </h1>
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center mt-5">
+            {% for book in books %}                
+            <div class="col mb-5">
+                <div class="card h-100">
+                    <!-- Product image-->
+                    <img class="card-img-top" width ="150" height="300"src="{{book.cover}}" alt="..." />
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder">{{book.title}}</h5>
+                            <!-- Product price-->
+                            {% for author in book.authors %}
+                                {{author.name}} <br>
+                            {% endfor %} <br>
+                            <div>
+                                {{book.status.getLabel}}
+                            </div>
+                            <!-- Show the mark of thie current book-->
+                            {% set mark = book.getMarks |round(0, "ceil")%}
+                            {% if mark == 0 %}
+                                {{ "aucun avis sur ce livre"}}
+                                {% else %}
+                                    {% for i in 0..(mark-1) %}
+                                        <i class="fas fa-star"></i>
+                                    {% endfor %}
+                                    {% if mark != 5 %}
+                                        {% for i in 0..(4-mark) %}
+                                        <i class="far fa-star"></i>
+                                        {% endfor %}
+                                    {% endif %}
+                                
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent d-flex justify-content-between">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto"  href="{{path("app_book_show", {id: book.id})}}">Voir</a></div>
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto"  href="{{path("app_shop_new", {id: book.id})}}" title="ajouter au panier"><i class="fa-solid fa-cart-shopping"></i></a></div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            Aucun en enregistrement en base de données.
+            {% endfor %}
+
+        </div>
+        <div class="navigation mt-2">
+    		{{ knp_pagination_render(books) }}
+		</div>
+    </div>
+</section>
+
+{% endblock %}
